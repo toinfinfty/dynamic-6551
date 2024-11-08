@@ -1,0 +1,49 @@
+import { useState } from "react";
+import { useWalletClient } from "wagmi";
+import { Address } from "viem";
+import { ERC1155ABI } from "../../utils/ERC1155ABI";
+
+export interface TransferERC1155NftParams {
+  contractAddress: Address;
+  fromAddress: Address;
+  toAddress: Address;
+  tokenId: string;
+  amount: number;
+}
+
+export const useTransferERC1155Nft = () => {
+  const { data: walletClient } = useWalletClient();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const transferERC1155Nft = async (params: TransferERC1155NftParams) => {
+    if (!walletClient) {
+      throw new Error("No wallet client connected");
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const tx = await walletClient.writeContract({
+        address: params.contractAddress,
+        abi: ERC1155ABI,
+        functionName: "safeTransferFrom",
+        args: [
+          params.fromAddress,
+          params.toAddress,
+          params.tokenId,
+          params.amount,
+          "0x0",
+        ],
+      });
+      return tx;
+    } catch (err) {
+      console.error("Error transferring NFT:", err);
+      setError("Failed to transfer NFT");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { transferERC1155Nft, loading, error };
+};
