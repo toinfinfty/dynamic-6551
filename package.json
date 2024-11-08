@@ -19,7 +19,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-docs": "typedoc"
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.1.7",

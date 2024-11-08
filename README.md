@@ -1,63 +1,258 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Areta Grant React Library
 
-Currently, two official plugins are available:
+The Areta Grant React Library provides a set of hooks and providers to interact with token-bound accounts, NFTs, and ERC-20 tokens in a React application. This library is built using React, TypeScript, and Vite, with an emphasis on handling token transfers and management within the Ethereum ecosystem.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+1. [Installation](#installation)
+2. [Setup and Usage](#setup-and-usage)
+3. [Available Providers](#available-providers)
+4. [Available Hooks](#available-hooks)
+5. [API Documentation](#api-documentation)
+6. [Debugging](#debugging)
+7. [Example Usage in a Project](#example-usage-in-a-project)
+8. [License](#license)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+To install the library, use npm or yarn:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install areta-grant-react-library
+# or
+yarn add areta-grant-react-library
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+You’ll also need to install peer dependencies if they’re not included in your project:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- **@rainbow-me/rainbowkit** for wallet styling
+- **wagmi** and **ethers** for Ethereum interaction
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Setup and Usage
+
+1. **Import the Required Providers**:
+
+   To use the library effectively, you must wrap your application with the `WagmiConfigProvider` and `TokenboundProvider` components. These providers configure wallet connection and token-bound account management.
+
+2. **Wrap Your App**:
+
+   In your main app layout or root component, wrap your application with the following providers:
+
+   ```tsx
+   import { WagmiConfigProvider } from "areta-grant-react-library";
+   import { TokenboundProvider } from "areta-grant-react-library";
+   import "@rainbow-me/rainbowkit/styles.css"; // Import RainbowKit styles for wallet connector
+
+   function App() {
+     return (
+       <WagmiConfigProvider>
+         <TokenboundProvider>
+           <YourAppComponent />
+         </TokenboundProvider>
+       </WagmiConfigProvider>
+     );
+   }
+
+   export default App;
+   ```
+
+   > **Note**: Ensure that `@rainbow-me/rainbowkit/styles.css` is imported in your root layout for styling the wallet connector.
+
+## Available Providers
+
+### `WagmiConfigProvider`
+
+The `WagmiConfigProvider` is responsible for initializing the Wagmi configuration, managing wallet connections, and setting up RainbowKit for UI components related to wallet connections.
+
+### `TokenboundProvider`
+
+The `TokenboundProvider` initializes the Tokenbound SDK and provides it to the components within the application. It enables functionalities for managing token-bound accounts and interacting with NFTs and tokens held by those accounts.
+
+## Available Hooks
+
+The library provides various hooks for interacting with tokens and token-bound accounts. Here are the key hooks:
+
+### 1. **useTokenboundTransfer**
+
+   - **Description**: This hook provides methods to transfer assets from a token-bound account.
+   - **Usage**:
+     ```tsx
+     import { useTokenboundTransfer } from "areta-grant-react-library";
+
+     const { transferNft, transferERC20, loading, error } = useTokenboundTransfer();
+
+     // Usage example
+     const handleTransfer = async () => {
+       await transferNft({
+         account: "0xYourAccountAddress",
+         tokenContract: "0xTokenContractAddress",
+         tokenId: "1",
+         tokenType: "ERC721",
+         recipientAddress: "0xRecipientAddress",
+       });
+     };
+     ```
+
+### 2. **useTransferERC20**
+
+   - **Description**: Provides a method for transferring ERC-20 tokens to any Ethereum address, including token-bound accounts.
+   - **Usage**:
+     ```tsx
+     import { useTransferERC20 } from "areta-grant-react-library";
+
+     const { transferERC20, loading, error } = useTransferERC20();
+
+     const handleERC20Transfer = async () => {
+       await transferERC20({
+         contractAddress: "0xERC20ContractAddress",
+         toAddress: "0xRecipientAddress",
+         amount: 1000,
+       });
+     };
+     ```
+
+### 3. **useTransferNft**
+
+   - **Description**: This hook provides a method for transferring ERC-721 NFTs to any Ethereum address.
+   - **Usage**:
+     ```tsx
+     import { useTransferNft } from "areta-grant-react-library";
+
+     const { transferNft, loading, error } = useTransferNft();
+
+     const handleNftTransfer = async () => {
+       await transferNft({
+         contractAddress: "0xNFTContractAddress",
+         fromAddress: "0xSenderAddress",
+         toAddress: "0xRecipientAddress",
+         tokenId: "1",
+       });
+     };
+     ```
+
+### 4. **useAccountHoldings**
+
+   - **Description**: Retrieves the NFTs and ERC-20 tokens held by a specific account including nested tokenbound accounts.
+   - **Usage**:
+     ```tsx
+     import { useAccountHoldings } from "areta-grant-react-library";
+
+     const { getAccountHoldings, loading, error } = useAccountHoldings();
+
+     useEffect(() => {
+       getAccountHoldings("0xYourWalletAddress");
+     }, []);
+     ```
+
+### 5. **useCreateTokenboundAccount**
+
+   - **Description**: Provides a method to create a token-bound account.
+   - **Usage**:
+     ```tsx
+     import { useCreateTokenboundAccount } from "areta-grant-react-library";
+
+     const { createTokenboundAccount, loading, error } = useCreateTokenboundAccount();
+
+     const handleCreateAccount = async () => {
+       await createTokenboundAccount("0xTokenContractAddress", "1");
+     };
+     ```
+
+## API Documentation
+
+### Providers
+
+1. **WagmiConfigProvider**: Initializes and configures the Wagmi client, providing wallet connectivity and RainbowKit functionality.
+2. **TokenboundProvider**: Sets up the Tokenbound SDK and provides functionality to interact with token-bound accounts.
+
+### Hooks
+
+- **useTokenboundTransfer**: Manages the transfer of NFTs and ERC-20 tokens out of a token-bound account.
+- **useTransferERC20**: Transfers ERC-20 tokens to any address, including token-bound accounts.
+- **useTransferNft**: Transfers ERC-721 NFTs to any address, including token-bound accounts.
+- **useAccountHoldings**: Fetches NFTs and ERC-20 token balances for a specific Ethereum account.
+- **useCreateTokenboundAccount**: Creates a new token-bound account for managing assets.
 
 ## Debugging
 
-This library uses the `debug` package for logging. To enable debug logs, set the `DEBUG` environment variable.
+This library uses the `debug` package for logging. You can enable debug logs by setting the `DEBUG` environment variable. The following debug namespaces are available:
 
 - `myLibrary:main` - Logs general library operations
 - `myLibrary:account` - Logs account-related operations
 - `myLibrary:nft` - Logs NFT-related operations
-- `myLibrary:tokenbound` - Logs tokenbound account operations
+- `myLibrary:tokenbound` - Logs token-bound account operations
 
-Example to enable all logs:
+To enable all logs, you can set `DEBUG=myLibrary:*`:
+
 ```bash
-DEBUG=myLibrary:* node myApp.js
+DEBUG=myLibrary:* node yourApp.js
+```
+
+Or, to enable specific logs, use the relevant namespace:
+
+```bash
+DEBUG=myLibrary:account node yourApp.js
+```
+
+## Example Usage in a Project
+
+1. **Install the library**:
+   ```bash
+   npm install areta-grant-react-library
+   ```
+
+2. **Wrap your application with the required providers**:
+
+   ```tsx
+   import React from "react";
+   import { WagmiConfigProvider, TokenboundProvider } from "areta-grant-react-library";
+   import "@rainbow-me/rainbowkit/styles.css";
+
+   function App() {
+     return (
+       <WagmiConfigProvider>
+         <TokenboundProvider>
+           <YourAppComponent />
+         </TokenboundProvider>
+       </WagmiConfigProvider>
+     );
+   }
+
+   export default App;
+   ```
+
+3. **Use hooks within components**:
+
+   ```tsx
+   import React from "react";
+   import { useTransferNft } from "areta-grant-react-library";
+
+   const TransferComponent = () => {
+     const { transferNft, loading, error } = useTransferNft();
+
+     const handleTransfer = async () => {
+       try {
+         await transferNft({
+           contractAddress: "0xNFTContractAddress",
+           fromAddress: "0xYourAddress",
+           toAddress: "0xRecipientAddress",
+           tokenId: "1",
+         });
+         console.log("Transfer successful!");
+       } catch (error) {
+         console.error("Transfer failed", error);
+       }
+     };
+
+     return (
+       <button onClick={handleTransfer} disabled={loading}>
+         {loading ? "Transferring..." : "Transfer NFT"}
+       </button>
+     );
+   };
+   ```
+
+## License
+
+This project is licensed under the MIT License.
