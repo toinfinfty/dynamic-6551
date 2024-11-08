@@ -1,9 +1,12 @@
-// src/contexts/TokenboundProvider.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useState, useEffect } from "react";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { useAccount } from "wagmi";
 import { getNetworkConfig } from "../utils/networkConfig";
 import { createWalletClient, custom } from "viem";
+import debug from "debug";
+
+const log = debug("myLibrary:TokenboundProvider");
 
 export interface TokenboundContextType {
   tokenboundClient: TokenboundClient | null;
@@ -14,7 +17,6 @@ export const TokenboundContext = createContext<
   TokenboundContextType | undefined
 >(undefined);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const TokenboundProvider = ({ children }: { children: any }) => {
   const [tokenboundClient, setTokenboundClient] =
     useState<TokenboundClient | null>(null);
@@ -23,10 +25,13 @@ export const TokenboundProvider = ({ children }: { children: any }) => {
   useEffect(() => {
     const initClient = async () => {
       if (!address || !window.ethereum) {
+        log("Address or Ethereum provider not found. Skipping initialization.");
         return;
       }
       try {
+        log("Initializing TokenboundClient with address:", address);
         const networkConfig = getNetworkConfig();
+        log("Using network configuration:", networkConfig);
 
         const walletClient = createWalletClient({
           account: address,
@@ -40,7 +45,9 @@ export const TokenboundProvider = ({ children }: { children: any }) => {
         });
 
         setTokenboundClient(client);
+        log("TokenboundClient initialized successfully");
       } catch (error) {
+        log("Failed to initialize TokenboundClient:", error);
         console.error("Failed to initialize TokenboundClient", error);
       }
     };

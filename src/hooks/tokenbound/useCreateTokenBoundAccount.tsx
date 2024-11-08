@@ -1,7 +1,9 @@
-// src/hooks/useCreateTokenboundAccount.ts
 import { useState } from "react";
 import { useTokenbound } from "../useTokenbound";
 import { Address } from "viem";
+import debug from "debug";
+
+const log = debug("myLibrary:useCreateTokenboundAccount");
 
 type CreateTokenboundAccountResponse = {
   account: `0x${string}`;
@@ -27,32 +29,47 @@ export const useCreateTokenboundAccount = (): UseCreateTokenboundAccount => {
     tokenId: string
   ): Promise<CreateTokenboundAccountResponse> => {
     if (!tokenboundClient) {
-      throw new Error("TokenboundClient not initialized");
+      const errorMsg = "TokenboundClient not initialized";
+      log(errorMsg);
+      throw new Error(errorMsg);
     }
+
     setLoading(true);
     setError(null);
+    log(
+      `Starting token-bound account creation for contract ${contractAddress}, tokenId: ${tokenId}`
+    );
 
     try {
       const response = await tokenboundClient.createAccount({
         tokenContract: contractAddress,
         tokenId,
       });
+      log(`Account creation transaction sent, txHash: ${response.txHash}`);
 
       const accountAddress = await tokenboundClient.getAccount({
         tokenContract: contractAddress,
         tokenId,
       });
+      log(`Retrieved token-bound account address: ${accountAddress}`);
 
       const isDeployed = await tokenboundClient.checkAccountDeployment({
         accountAddress,
       });
+      log(`Account deployment status for ${accountAddress}: ${isDeployed}`);
 
       if (!isDeployed) {
-        throw new Error("Failed to deploy account");
+        const deployError = "Failed to deploy account";
+        log(deployError);
+        throw new Error(deployError);
       }
 
+      log(
+        `Token-bound account created successfully for ${contractAddress} with tokenId ${tokenId}`
+      );
       return response;
     } catch (err) {
+      log("Error creating token-bound account:", err);
       console.error("Error creating token-bound account:", err);
       setError("Failed to create token-bound account");
       throw err;

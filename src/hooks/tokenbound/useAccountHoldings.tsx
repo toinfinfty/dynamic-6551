@@ -1,10 +1,12 @@
-// src/hooks/useFetchNftsForWallet.ts
 import { useState } from "react";
 import { alchemyClient } from "../../utils/alchemyClient";
 import { getNetworkConfig } from "../../utils/networkConfig";
 import { useTokenbound } from "../useTokenbound";
 import { OwnedNft } from "alchemy-sdk";
 import { Address } from "viem";
+import debug from "debug";
+
+const log = debug("myLibrary:useAccountHoldings");
 
 interface TokenboundAccount {
   address: Address;
@@ -18,48 +20,18 @@ export interface NFTWithTokenboundAccount extends OwnedNft {
 }
 
 export interface OwnedToken {
-  /** The contract address of the token. */
   contractAddress: string;
-  /**
-   * The raw value of the balance field as a hex string. This value is undefined
-   * if the {@link error} field is present.
-   */
   rawBalance?: string;
-  /**
-   * The formatted value of the balance field as a hex string. This value is
-   * undefined if the {@link error} field is present, or if the `decimals` field=
-   * is undefined.
-   */
   balance?: string;
-  /** */
-  /**
-   * The token's name. Is undefined if the name is not defined in the contract and
-   * not available from other sources.
-   */
   name?: string;
-  /**
-   * The token's symbol. Is undefined if the symbol is not defined in the contract
-   * and not available from other sources.
-   */
   symbol?: string;
-  /**
-   * The number of decimals of the token. Is undefined if not defined in the
-   * contract and not available from other sources.
-   */
   decimals?: number;
-  /** URL link to the token's logo. Is undefined if the logo is not available. */
   logo?: string;
-  /**
-   * Error from fetching the token balances. If this field is defined, none of
-   * the other fields will be defined.
-   */
   error?: string;
 }
 
 export interface GetTokensForOwnerResponse {
-  /** Owned tokens for the provided addresses along with relevant metadata. */
   tokens: OwnedToken[];
-  /** Page key for the next page of results, if one exists. */
   pageKey?: string;
 }
 
@@ -73,18 +45,28 @@ export const useAccountHoldings = () => {
     chainId: number,
     visitedAccounts: Set<Address>
   ): Promise<NFTWithTokenboundAccount[]> => {
-    if (visitedAccounts.has(accountAddress)) return [];
+    if (visitedAccounts.has(accountAddress)) {
+      log(`Skipping already visited account: ${accountAddress}`);
+      return [];
+    }
+    log(`Fetching NFTs for account: ${accountAddress} on chain: ${chainId}`);
     visitedAccounts.add(accountAddress);
 
     try {
       const nftsResponse = await alchemyClient.nft.getNftsForOwner(
         accountAddress
       );
+      log(
+        `Fetched ${nftsResponse.ownedNfts.length} NFTs for account ${accountAddress}`
+      );
       const nfts: NFTWithTokenboundAccount[] = [];
 
       for (const nft of nftsResponse.ownedNfts) {
         let tbAccountAddress: Address | undefined;
         try {
+          log(
+            `Fetching tokenbound account for NFT contract: ${nft.contract.address}, tokenId: ${nft.tokenId}`
+          );
           tbAccountAddress = await tokenboundClient?.getAccount({
             tokenContract: nft.contract.address as Address,
             tokenId: nft.tokenId,
@@ -95,10 +77,14 @@ export const useAccountHoldings = () => {
             const isDeployed = await tokenboundClient?.checkAccountDeployment({
               accountAddress: tbAccountAddress,
             });
+            log(
+              `Tokenbound account ${tbAccountAddress} deployment status: ${isDeployed}`
+            );
             if (!isDeployed) tbAccountAddress = undefined;
           }
         } catch (err) {
-          console.error("Error fetching token bound account:", err);
+          log("Error fetching tokenbound account:", err);
+          console.error("Error fetching tokenbound account:", err);
         }
 
         let childNfts: NFTWithTokenboundAccount[] = [];
@@ -111,6 +97,9 @@ export const useAccountHoldings = () => {
             visitedAccounts
           );
           childERC20Tokens = await fetchERC20TokensForAccount(tbAccountAddress);
+          log(
+            `Fetched ${childNfts.length} child NFTs and ${childERC20Tokens.length} child ERC-20 tokens for tokenbound account: ${tbAccountAddress}`
+          );
         }
 
         nfts.push({
@@ -128,6 +117,7 @@ export const useAccountHoldings = () => {
 
       return nfts;
     } catch (err) {
+      log("Error fetching NFTs for account:", err);
       console.error("Error fetching NFTs for account:", err);
       throw err;
     } finally {
@@ -138,13 +128,18 @@ export const useAccountHoldings = () => {
   const fetchERC20TokensForAccount = async (
     accountAddress: Address
   ): Promise<OwnedToken[]> => {
+    log(`Fetching ERC-20 tokens for account: ${accountAddress}`);
     try {
       const tokensResponse = await alchemyClient.core.getTokensForOwner(
         accountAddress
       );
+      log(
+        `Fetched ${tokensResponse.tokens.length} ERC-20 tokens for account: ${accountAddress}`
+      );
       return tokensResponse.tokens;
     } catch (err) {
-      console.error("Error fetching ERC20 tokens for account:", err);
+      log("Error fetching ERC-20 tokens for account:", err);
+      console.error("Error fetching ERC-20 tokens for account:", err);
       return [];
     }
   };
@@ -152,19 +147,27 @@ export const useAccountHoldings = () => {
   const getAccountHoldings = async (walletAddress: Address) => {
     setLoading(true);
     setError(null);
+    log(`Fetching account holdings for wallet: ${walletAddress}`);
     try {
       const chainId = getNetworkConfig().id;
+      log(`Using chain ID: ${chainId}`);
       const visitedAccounts = new Set<Address>();
       const nfts = await fetchNftsForAccount(
         walletAddress,
         chainId,
         visitedAccounts
       );
+      log(`Total NFTs fetched for wallet ${walletAddress}: ${nfts.length}`);
+
       const tokens = await alchemyClient.core.getTokensForOwner(walletAddress);
+      log(
+        `Fetched ${tokens.tokens.length} ERC-20 tokens for wallet: ${walletAddress}`
+      );
 
       return { nfts, tokens };
     } catch (err) {
-      console.error("Error fetching NFTs:", err);
+      log("Error fetching account holdings:", err);
+      console.error("Error fetching account holdings:", err);
       setError("Failed to fetch NFTs");
       throw err;
     } finally {

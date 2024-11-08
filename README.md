@@ -48,3 +48,16 @@ export default tseslint.config({
   },
 })
 ```
+
+## Debugging
+
+This library uses the `debug` package for logging. To enable debug logs, set the `DEBUG` environment variable.
+
+- `myLibrary:main` - Logs general library operations
+- `myLibrary:account` - Logs account-related operations
+- `myLibrary:nft` - Logs NFT-related operations
+- `myLibrary:tokenbound` - Logs tokenbound account operations
+
+Example to enable all logs:
+```bash
+DEBUG=myLibrary:* node myApp.js

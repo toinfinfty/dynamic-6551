@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useWalletClient } from "wagmi";
 import { Address } from "viem";
 import { ERC20ABI } from "../../utils/ERC20ABI";
+import debug from "debug";
+
+const log = debug("myLibrary:useTransferERC20");
 
 export interface TransferERC20NftParams {
   contractAddress: Address;
@@ -16,27 +19,36 @@ export const useTransferERC20 = () => {
 
   const transferERC20 = async (params: TransferERC20NftParams) => {
     if (!walletClient) {
-      throw new Error("No wallet client connected");
+      const errorMsg = "No wallet client connected";
+      log(errorMsg);
+      throw new Error(errorMsg);
     }
+
     setLoading(true);
     setError(null);
+    log(
+      `Attempting to transfer ${params.amount} tokens from contract ${params.contractAddress} to ${params.toAddress}`
+    );
+
     try {
       const tx = await walletClient.writeContract({
         address: params.contractAddress,
         abi: ERC20ABI,
         functionName: "transfer",
-        args: [
-          params.toAddress,
-          params.amount,
-        ],
+        args: [params.toAddress, params.amount],
       });
+      log(`Transfer transaction sent successfully`);
       return tx;
     } catch (err) {
+      log("Error transferring ERC20:", err);
       console.error("Error transferring ERC20:", err);
       setError("Failed to transfer ERC20");
       throw err;
     } finally {
       setLoading(false);
+      log(
+        `Transfer operation completed for contract address: ${params.contractAddress}`
+      );
     }
   };
 

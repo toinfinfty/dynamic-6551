@@ -1,8 +1,10 @@
-// src/hooks/useBurnNft.ts
 import { useState } from "react";
 import { useWalletClient } from "wagmi";
 import { Address } from "viem";
 import { ERC20ABI } from "../../utils/ERC20ABI";
+import debug from "debug";
+
+const log = debug("myLibrary:useBurnERC20");
 
 export const useBurnERC20 = () => {
   const { data: walletClient } = useWalletClient();
@@ -11,10 +13,15 @@ export const useBurnERC20 = () => {
 
   const burnERC20 = async (contractAddress: Address, amount: number) => {
     if (!walletClient) {
-      throw new Error("No wallet client connected");
+      const errorMsg = "No wallet client connected";
+      log(errorMsg);
+      throw new Error(errorMsg);
     }
+
     setLoading(true);
     setError(null);
+    log(`Attempting to burn ${amount} tokens from contract at address: ${contractAddress}`);
+
     try {
       const tx = await walletClient.writeContract({
         address: contractAddress,
@@ -22,13 +29,16 @@ export const useBurnERC20 = () => {
         functionName: "burn",
         args: [amount],
       });
+      log(`Burn transaction sent successfully`);
       return tx;
     } catch (err) {
+      log("Error burning ERC20 token:", err);
       console.error("Error burning ERC20:", err);
       setError("Failed to burn ERC20");
       throw err;
     } finally {
       setLoading(false);
+      log(`Burn operation completed for contract address: ${contractAddress}`);
     }
   };
 
