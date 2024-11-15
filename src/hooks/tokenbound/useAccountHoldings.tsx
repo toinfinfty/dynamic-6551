@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { alchemyClient } from "../../utils/alchemyClient";
+// import { alchemyClient } from "../../utils/alchemyClient";
 import { getNetworkConfig } from "../../utils/networkConfig";
 import { useTokenbound } from "../useTokenbound";
 import { OwnedNft } from "alchemy-sdk";
 import { Address } from "viem";
 import debug from "debug";
+import { useConfig } from "../../contexts/ConfigProvider";
 
 const log = debug("myLibrary:useAccountHoldings");
 
@@ -39,6 +40,7 @@ export const useAccountHoldings = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { tokenboundClient } = useTokenbound();
+  const { alchemyClient } = useConfig();
 
   const fetchNftsForAccount = async (
     accountAddress: Address,
