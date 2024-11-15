@@ -3,7 +3,7 @@ import { useWalletClient } from "wagmi";
 import { ERC20ABI } from "../../utils/ERC20ABI";
 import debug from "debug";
 
-const log = debug("myLibrary:useMintERC20");
+const log = debug("dynamic-6551:useMintERC20");
 
 export const useMintERC20 = () => {
   const { data: walletClient } = useWalletClient();

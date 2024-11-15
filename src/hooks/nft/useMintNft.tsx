@@ -4,7 +4,7 @@ import { ERC721ABI } from "../../utils/ERC721ABI";
 import { Address } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:useMintNft");
+const log = debug("dynamic-6551:useMintNft");
 
 export const useMintNft = () => {
   const { data: walletClient } = useWalletClient();

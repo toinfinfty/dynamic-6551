@@ -6,7 +6,7 @@ import { OwnedNft } from "alchemy-sdk";
 import { Address } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:useAccountHoldings");
+const log = debug("dynamic-6551:useAccountHoldings");
 
 interface TokenboundAccount {
   address: Address;

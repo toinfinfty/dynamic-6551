@@ -4,7 +4,7 @@ import { Address } from "viem";
 import { ERC1155ABI } from "../../utils/ERC1155ABI";
 import debug from "debug";
 
-const log = debug("myLibrary:useTransferERC1155Nft");
+const log = debug("dynamic-6551:useTransferERC1155Nft");
 
 export interface TransferERC1155NftParams {
   contractAddress: Address;

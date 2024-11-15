@@ -4,7 +4,7 @@ import { Address } from "viem";
 import { ERC20ABI } from "../../utils/ERC20ABI";
 import debug from "debug";
 
-const log = debug("myLibrary:useBurnERC20");
+const log = debug("dynamic-6551:useBurnERC20");
 
 export const useBurnERC20 = () => {
   const { data: walletClient } = useWalletClient();

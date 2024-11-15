@@ -4,7 +4,7 @@ import { Address } from "viem";
 import { ERC1155ABI } from "../../utils/ERC1155ABI";
 import debug from "debug";
 
-const log = debug("myLibrary:useBurnNftERC1155");
+const log = debug("dynamic-6551:useBurnNftERC1155");
 
 export const useBurnNftERC1155 = () => {
   const { data: walletClient } = useWalletClient();

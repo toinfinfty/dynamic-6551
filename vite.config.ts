@@ -19,9 +19,9 @@ export default defineConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
-            name: 'MyReactLibrary',
+            name: 'dynamic-6551',
             formats: ['es', 'cjs'],
-            fileName: (format) => `my-lib.${format}.js`,
+            fileName: (format) => `dynamic-6551.${format}.js`,
         },
         rollupOptions: {
             external: ['react', 'react-dom'],

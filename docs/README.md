@@ -1,4 +1,4 @@
-**areta-grant-react-library v1.0.0** • [**Docs**](globals.md)
+**dynamic-6551 v1.0.0** • [**Docs**](globals.md)
 
 ***
 
@@ -57,11 +57,11 @@ export default tseslint.config({
 
 This library uses the `debug` package for logging. To enable debug logs, set the `DEBUG` environment variable.
 
-- `myLibrary:main` - Logs general library operations
-- `myLibrary:account` - Logs account-related operations
-- `myLibrary:nft` - Logs NFT-related operations
-- `myLibrary:tokenbound` - Logs tokenbound account operations
+- `dynamic-6551:main` - Logs general library operations
+- `dynamic-6551:account` - Logs account-related operations
+- `dynamic-6551:nft` - Logs NFT-related operations
+- `dynamic-6551:tokenbound` - Logs tokenbound account operations
 
 Example to enable all logs:
 ```bash
-DEBUG=myLibrary:* node myApp.js
+DEBUG=dynamic-6551:* node myApp.js
