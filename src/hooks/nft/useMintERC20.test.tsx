@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useMintERC20 } from './useMintERC20';
 import { useWalletClient } from 'wagmi';
@@ -20,7 +20,7 @@ describe('useMintERC20', () => {
     });
 
     it('should mint ERC20 tokens successfully', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useMintERC20());
 
@@ -47,7 +47,7 @@ describe('useMintERC20', () => {
     });
 
     it('should throw an error when wallet client is not connected', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: null });
+        (useWalletClient as Mock).mockReturnValue({ data: null });
 
         const { result } = renderHook(() => useMintERC20());
 
@@ -68,7 +68,7 @@ describe('useMintERC20', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useMintERC20());
 

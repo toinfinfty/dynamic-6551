@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useCreateTokenboundAccount } from './useCreateTokenBoundAccount';
 import { useTokenbound } from '../useTokenbound';
@@ -21,7 +21,7 @@ describe('useCreateTokenboundAccount', () => {
     });
 
     it('should create token-bound account successfully', async () => {
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useCreateTokenboundAccount());
 
@@ -46,7 +46,7 @@ describe('useCreateTokenboundAccount', () => {
     });
 
     it('should throw an error when tokenboundClient is not initialized', async () => {
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: null });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: null });
 
         const { result } = renderHook(() => useCreateTokenboundAccount());
 
@@ -68,7 +68,7 @@ describe('useCreateTokenboundAccount', () => {
         const originalConsoleError = console.error;
         console.error = vi.fn();
 
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useCreateTokenboundAccount());
 

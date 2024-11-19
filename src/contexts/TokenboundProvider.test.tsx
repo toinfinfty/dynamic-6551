@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { TokenboundProvider, TokenboundContext } from './TokenboundProvider';
 import { useAccount } from 'wagmi';
@@ -31,9 +31,9 @@ const MOCK_NETWORK_CONFIG = { chainId: 1 };
 describe('TokenboundProvider', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        (useAccount as vi.Mock).mockReturnValue({ address: MOCK_ADDRESS });
-        (getNetworkConfig as vi.Mock).mockReturnValue(MOCK_NETWORK_CONFIG);
-        (createWalletClient as vi.Mock).mockReturnValue({});
+        (useAccount as Mock).mockReturnValue({ address: MOCK_ADDRESS });
+        (getNetworkConfig as Mock).mockReturnValue(MOCK_NETWORK_CONFIG);
+        (createWalletClient as Mock).mockReturnValue({});
     });
 
     it('should initialize TokenboundClient correctly', async () => {
@@ -65,7 +65,7 @@ describe('TokenboundProvider', () => {
     });
 
     it('should not initialize TokenboundClient if address is not available', async () => {
-        (useAccount as vi.Mock).mockReturnValue({ address: undefined });
+        (useAccount as Mock).mockReturnValue({ address: undefined });
 
         const TestComponent = () => {
             const context = useContext(TokenboundContext);

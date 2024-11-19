@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { render } from '@testing-library/react';
 import { WagmiConfigProvider } from './WagmiConfigProvider';
 import { getNetworkConfig } from '../utils/networkConfig';
@@ -57,10 +57,10 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 describe('WagmiConfigProvider', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        (getNetworkConfig as vi.Mock).mockReturnValue(MOCK_NETWORK_CONFIG);
-        (createConfig as vi.Mock).mockReturnValue({});
-        (metaMask as vi.Mock).mockReturnValue({});
-        (http as vi.Mock).mockReturnValue({});
+        (getNetworkConfig as Mock).mockReturnValue(MOCK_NETWORK_CONFIG);
+        (createConfig as Mock).mockReturnValue({});
+        (metaMask as unknown as Mock).mockReturnValue({});
+        (http as Mock).mockReturnValue({});
     });
 
     it('should initialize WagmiConfigProvider correctly', () => {
@@ -85,7 +85,7 @@ describe('WagmiConfigProvider', () => {
     });
     it('should handle unsuccessful initialization', () => {
         // Mock createConfig to throw an error
-        (createConfig as vi.Mock).mockImplementation(() => {
+        (createConfig as Mock).mockImplementation(() => {
             throw new Error('Initialization failed');
         });
 

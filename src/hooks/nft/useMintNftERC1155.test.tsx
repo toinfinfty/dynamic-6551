@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useMintNftERC1155 } from './useMintNftERC1155';
 import { useWalletClient } from 'wagmi';
@@ -21,7 +21,7 @@ describe('useMintNftERC1155', () => {
     });
 
     it('should mint ERC1155 tokens successfully', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useMintNftERC1155());
 
@@ -49,7 +49,7 @@ describe('useMintNftERC1155', () => {
     });
 
     it('should throw an error when wallet client is not connected', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: null });
+        (useWalletClient as Mock).mockReturnValue({ data: null });
 
         const { result } = renderHook(() => useMintNftERC1155());
 
@@ -71,7 +71,7 @@ describe('useMintNftERC1155', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useMintNftERC1155());
 
