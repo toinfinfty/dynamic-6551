@@ -6,6 +6,22 @@ import debug from "debug";
 
 const log = debug("dynamic-6551:useBurnERC20");
 
+/**
+ * Custom hook to burn ERC20 tokens.
+ *
+ * @returns {Object} An object containing the `burnERC20` function, `loading` state, and `error` state.
+ *
+ * @typedef {Object} BurnERC20Hook
+ * @property {Function} burnERC20 - Function to burn ERC20 tokens.
+ * @property {boolean} loading - Indicates if the burn operation is in progress.
+ * @property {string | null} error - Error message if the burn operation fails.
+ *
+ * @function burnERC20
+ * @param {Address} contractAddress - The address of the ERC20 contract.
+ * @param {number} amount - The amount of tokens to burn.
+ * @returns {Promise<any>} The transaction object if the burn operation is successful.
+ * @throws Will throw an error if the wallet client is not connected or if the burn operation fails.
+ */
 export const useBurnERC20 = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);

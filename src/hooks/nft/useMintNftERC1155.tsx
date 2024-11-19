@@ -5,6 +5,23 @@ import debug from "debug";
 
 const log = debug("dynamic-6551:useMintNftERC1155");
 
+/**
+ * Custom hook to mint ERC-1155 NFTs.
+ *
+ * @returns {Object} - An object containing the mintNftERC1155 function, loading state, and error state.
+ * 
+ * @property {Function} mintNftERC1155 - Function to mint ERC-1155 NFTs.
+ * @property {boolean} loading - Boolean indicating if the minting process is in progress.
+ * @property {string | null} error - Error message if the minting process fails, otherwise null.
+ * 
+ * @function mintNftERC1155
+ * @async
+ * @param {string} contractAddress - The address of the ERC-1155 contract.
+ * @param {number} tokenId - The ID of the token to mint.
+ * @param {number} quantity - The quantity of tokens to mint.
+ * @throws {Error} Throws an error if no wallet client is connected or if the minting process fails.
+ * @returns {Promise<any>} - The transaction object of the mint operation.
+ */
 export const useMintNftERC1155 = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);

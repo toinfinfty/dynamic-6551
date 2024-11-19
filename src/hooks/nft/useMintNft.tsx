@@ -6,6 +6,22 @@ import debug from "debug";
 
 const log = debug("dynamic-6551:useMintNft");
 
+/**
+ * Custom hook to mint an NFT using a connected wallet client.
+ *
+ * @returns {Object} An object containing the `mintNft` function, `loading` state, and `error` state.
+ *
+ * @typedef {Object} MintNftReturn
+ * @property {Function} mintNft - Function to mint an NFT.
+ * @property {boolean} loading - Indicates if the minting process is in progress.
+ * @property {string | null} error - Error message if the minting process fails.
+ *
+ * @function mintNft
+ * @param {string} contractAddress - The address of the NFT contract.
+ * @param {Address} to - The address to which the NFT will be minted.
+ * @returns {Promise<any>} The transaction object if the minting is successful.
+ * @throws Will throw an error if the wallet client is not connected or if the minting process fails.
+ */
 export const useMintNft = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);

@@ -12,6 +12,25 @@ export interface TransferERC20NftParams {
   amount: number;
 }
 
+/**
+ * Custom hook to transfer ERC20 tokens using a connected wallet client.
+ *
+ * @returns {Object} An object containing the transferERC20 function, loading state, and error state.
+ *
+ * @typedef {Object} TransferERC20NftParams
+ * @property {string} contractAddress - The address of the ERC20 contract.
+ * @property {string} toAddress - The address to transfer tokens to.
+ * @property {string | number | bigint} amount - The amount of tokens to transfer.
+ *
+ * @function transferERC20
+ * @async
+ * @param {TransferERC20NftParams} params - The parameters for the transfer operation.
+ * @throws Will throw an error if no wallet client is connected or if the transfer fails.
+ * @returns {Promise<any>} The transaction object if the transfer is successful.
+ *
+ * @property {boolean} loading - Indicates if the transfer operation is in progress.
+ * @property {string | null} error - Contains the error message if the transfer fails.
+ */
 export const useTransferERC20 = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);

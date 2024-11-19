@@ -9,17 +9,46 @@ import { useConfig } from "../../contexts/ConfigProvider";
 
 const log = debug("dynamic-6551:useAccountHoldings");
 
+/**
+ * Interface representing a Tokenbound Account.
+ *
+ * @typedef {Object} TokenboundAccount
+ * @property {Address} address - The address of the tokenbound account.
+ * @property {NFTWithTokenboundAccount[]} nfts - NFTs owned by the tokenbound account.
+ * @property {OwnedToken[]} tokens - ERC-20 tokens owned by the tokenbound account.
+ */
 interface TokenboundAccount {
   address: Address;
   nfts: NFTWithTokenboundAccount[];
   tokens: OwnedToken[];
 }
 
+/**
+ * Interface extending OwnedNft to include owner and optional tokenbound account.
+ *
+ * @typedef {Object} NFTWithTokenboundAccount
+ * @extends OwnedNft
+ * @property {Address} owner - The owner address of the NFT.
+ * @property {TokenboundAccount} [tokenboundAccount] - The associated tokenbound account.
+ */
 export interface NFTWithTokenboundAccount extends OwnedNft {
   owner: Address;
   tokenboundAccount?: TokenboundAccount;
 }
 
+/**
+ * Interface representing an Owned ERC-20 Token.
+ *
+ * @typedef {Object} OwnedToken
+ * @property {string} contractAddress - The contract address of the token.
+ * @property {string} [rawBalance] - The raw balance of the token.
+ * @property {string} [balance] - The formatted balance of the token.
+ * @property {string} [name] - The name of the token.
+ * @property {string} [symbol] - The symbol of the token.
+ * @property {number} [decimals] - The number of decimals of the token.
+ * @property {string} [logo] - The logo URL of the token.
+ * @property {string} [error] - Any error related to fetching the token.
+ */
 export interface OwnedToken {
   contractAddress: string;
   rawBalance?: string;
@@ -31,17 +60,48 @@ export interface OwnedToken {
   error?: string;
 }
 
+/**
+ * Interface for the response from getting tokens for an owner.
+ *
+ * @typedef {Object} GetTokensForOwnerResponse
+ * @property {OwnedToken[]} tokens - The list of owned tokens.
+ * @property {string} [pageKey] - The pagination key for fetching more tokens.
+ */
 export interface GetTokensForOwnerResponse {
   tokens: OwnedToken[];
   pageKey?: string;
 }
 
+/**
+ * Custom hook to fetch account holdings, including NFTs and ERC-20 tokens, using Alchemy and Tokenbound clients.
+ *
+ * @returns {Object} An object containing the `getAccountHoldings` function, `loading` state, and `error` state.
+ *
+ * @typedef {Object} AccountHoldingsReturn
+ * @property {Function} getAccountHoldings - Function to fetch account holdings.
+ * @property {boolean} loading - Indicates if the fetching process is in progress.
+ * @property {string | null} error - Error message if the fetching process fails.
+ *
+ * @function getAccountHoldings
+ * @async
+ * @param {Address} walletAddress - The wallet address to fetch holdings for.
+ * @throws Will throw an error if fetching fails.
+ * @returns {Promise<{ nfts: NFTWithTokenboundAccount[]; tokens: GetTokensForOwnerResponse }>} The account holdings.
+ */
 export const useAccountHoldings = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const { tokenboundClient } = useTokenbound();
   const { alchemyClient } = useConfig();
 
+  /**
+   * Recursive function to fetch NFTs for a given account, including any tokenbound accounts.
+   *
+   * @param {Address} accountAddress - The address of the account to fetch NFTs for.
+   * @param {number} chainId - The chain ID to use for fetching.
+   * @param {Set<Address>} visitedAccounts - A set of visited accounts to prevent infinite loops.
+   * @returns {Promise<NFTWithTokenboundAccount[]>} A promise that resolves to an array of NFTs with tokenbound accounts.
+   */
   const fetchNftsForAccount = async (
     accountAddress: Address,
     chainId: number,
@@ -127,6 +187,12 @@ export const useAccountHoldings = () => {
     }
   };
 
+  /**
+   * Function to fetch ERC-20 tokens for a given account.
+   *
+   * @param {Address} accountAddress - The address of the account to fetch ERC-20 tokens for.
+   * @returns {Promise<OwnedToken[]>} A promise that resolves to an array of owned ERC-20 tokens.
+   */
   const fetchERC20TokensForAccount = async (
     accountAddress: Address
   ): Promise<OwnedToken[]> => {
@@ -146,6 +212,13 @@ export const useAccountHoldings = () => {
     }
   };
 
+  /**
+   * Function to get account holdings, including NFTs and ERC-20 tokens.
+   *
+   * @param {Address} walletAddress - The wallet address to fetch holdings for.
+   * @throws Will throw an error if fetching fails.
+   * @returns {Promise<{ nfts: NFTWithTokenboundAccount[]; tokens: GetTokensForOwnerResponse }>} The account holdings.
+   */
   const getAccountHoldings = async (walletAddress: Address) => {
     setLoading(true);
     setError(null);

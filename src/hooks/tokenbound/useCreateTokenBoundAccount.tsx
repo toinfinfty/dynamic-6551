@@ -3,13 +3,29 @@ import { useTokenbound } from "../useTokenbound";
 import { Address } from "viem";
 import debug from "debug";
 
+/** Debug logger for the useCreateTokenboundAccount hook */
 const log = debug("dynamic-6551:useCreateTokenboundAccount");
 
+/**
+ * Type representing the response from creating a token-bound account.
+ *
+ * @typedef {Object} CreateTokenboundAccountResponse
+ * @property {`0x${string}`} account - The address of the created token-bound account.
+ * @property {`0x${string}`} txHash - The transaction hash of the account creation.
+ */
 type CreateTokenboundAccountResponse = {
   account: `0x${string}`;
   txHash: `0x${string}`;
 };
 
+/**
+ * Type representing the return value of the useCreateTokenboundAccount hook.
+ *
+ * @typedef {Object} UseCreateTokenboundAccount
+ * @property {Function} createTokenboundAccount - Function to create a token-bound account.
+ * @property {boolean} loading - Indicates if the creation process is in progress.
+ * @property {string | null} error - Error message if the creation process fails.
+ */
 export type UseCreateTokenboundAccount = {
   createTokenboundAccount: (
     contractAddress: Address,
@@ -19,11 +35,24 @@ export type UseCreateTokenboundAccount = {
   error: string | null;
 };
 
+/**
+ * Custom React hook to create a token-bound account using the Tokenbound client.
+ *
+ * @returns {UseCreateTokenboundAccount} An object containing the `createTokenboundAccount` function, `loading` state, and `error` state.
+ */
 export const useCreateTokenboundAccount = (): UseCreateTokenboundAccount => {
   const { tokenboundClient } = useTokenbound();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Function to create a token-bound account for a specific NFT.
+   *
+   * @param {Address} contractAddress - The address of the NFT contract.
+   * @param {string} tokenId - The token ID of the NFT.
+   * @returns {Promise<CreateTokenboundAccountResponse>} A promise that resolves to the account creation response.
+   * @throws Will throw an error if the Tokenbound client is not initialized or if the account creation fails.
+   */
   const createTokenboundAccount = async (
     contractAddress: Address,
     tokenId: string

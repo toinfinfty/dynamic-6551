@@ -13,6 +13,26 @@ export interface TransferNftParams {
   tokenId: string;
 }
 
+/**
+ * Custom hook to handle the transfer of NFTs.
+ *
+ * @returns {Object} An object containing the transferNft function, loading state, and error state.
+ *
+ * @typedef {Object} TransferNftParams
+ * @property {string} contractAddress - The address of the NFT contract.
+ * @property {string} fromAddress - The address of the sender.
+ * @property {string} toAddress - The address of the recipient.
+ * @property {string | number} tokenId - The ID of the token to be transferred.
+ *
+ * @function transferNft
+ * @param {TransferNftParams} params - The parameters required to transfer the NFT.
+ * @throws Will throw an error if no wallet client is connected or if the transfer fails.
+ *
+ * @typedef {Object} ReturnObject
+ * @property {Function} transferNft - The function to initiate the NFT transfer.
+ * @property {boolean} loading - The loading state indicating if the transfer is in progress.
+ * @property {string | null} error - The error state containing any error message if the transfer fails.
+ */
 export const useTransferNft = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);

@@ -6,11 +6,23 @@ import debug from "debug";
 
 const log = debug("dynamic-6551:useBurnNftERC1155");
 
+/**
+ * Custom hook to burn ERC-1155 NFTs.
+ * @returns {Object} - An object containing the burn function, loading state, and error state.
+ */
 export const useBurnNftERC1155 = () => {
   const { data: walletClient } = useWalletClient();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Function to burn ERC-1155 NFTs.
+   * @param {Address} contractAddress - The address of the ERC-1155 contract.
+   * @param {number} tokenId - The ID of the token to burn.
+   * @param {number} quantity - The quantity of tokens to burn.
+   * @returns {Promise<any>} - The transaction result.
+   * @throws {Error} - Throws an error if the wallet client is not connected or if the burn operation fails.
+   */
   const burnNftERC1155 = async (
     contractAddress: Address,
     tokenId: number,
@@ -30,7 +42,6 @@ export const useBurnNftERC1155 = () => {
     );
 
     try {
-      // Execute the burn transaction
       const tx = await walletClient.writeContract({
         address: contractAddress,
         abi: ERC1155ABI,

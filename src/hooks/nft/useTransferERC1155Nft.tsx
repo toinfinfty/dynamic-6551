@@ -14,6 +14,21 @@ export interface TransferERC1155NftParams {
   amount: number;
 }
 
+/**
+ * Custom hook to transfer ERC-1155 NFTs.
+ *
+ * @returns {Object} An object containing the transfer function, loading state, and error state.
+ * @property {Function} transferERC1155Nft - Function to transfer ERC-1155 NFTs.
+ * @property {boolean} loading - Indicates if the transfer operation is in progress.
+ * @property {string | null} error - Error message if the transfer operation fails.
+ *
+ * @typedef {Object} TransferERC1155NftParams
+ * @property {string} contractAddress - The address of the ERC-1155 contract.
+ * @property {string} fromAddress - The address of the sender.
+ * @property {string} toAddress - The address of the recipient.
+ * @property {number} tokenId - The ID of the token to transfer.
+ * @property {number} amount - The amount of tokens to transfer.
+ */
 export const useTransferERC1155Nft = () => {
   const { data: walletClient } = useWalletClient();
   const [loading, setLoading] = useState(false);
