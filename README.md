@@ -31,43 +31,56 @@ You’ll also need to install peer dependencies if they’re not included in you
 
 ## Setup and Usage
 
-1. **Import the Required Providers**:
+1. **Import the ConfigProvider:**:
 
-   To use the library effectively, you must wrap your application with the `WagmiConfigProvider` and `TokenboundProvider` components. These providers configure wallet connection and token-bound account management.
+  To use the library effectively, wrap your application with the ConfigProvider component. This provider configures wallet connections, token-bound account management, and provides necessary configurations like the Alchemy client.
 
 2. **Wrap Your App**:
 
-   In your main app layout or root component, wrap your application with the following providers:
+   In your main app layout or root component, wrap your application with the ConfigProvider:
 
    ```tsx
-   import { WagmiConfigProvider } from "dynamic-6551";
-   import { TokenboundProvider } from "dynamic-6551";
-   import "@rainbow-me/rainbowkit/styles.css"; // Import RainbowKit styles for wallet connector
+  import React from "react";
+  import { ConfigProvider } from "areta-grant-react-library";
+  import "@rainbow-me/rainbowkit/styles.css"; // Import RainbowKit styles for wallet connector
+  import { Alchemy, Network } from "alchemy-sdk";
 
-   function App() {
-     return (
-       <WagmiConfigProvider>
-         <TokenboundProvider>
-           <YourAppComponent />
-         </TokenboundProvider>
-       </WagmiConfigProvider>
-     );
-   }
+  // Initialize the Alchemy client
+  const alchemyClient = new Alchemy({
+    apiKey: process.env.REACT_APP_ALCHEMY_API_KEY || "YourDefaultAPIKey",
+    network:
+      process.env.REACT_APP_BLOCKCHAIN_NETWORK === "mainnet"
+        ? Network.ARB_MAINNET
+        : Network.ARB_SEPOLIA,
+    connectionInfoOverrides: {
+      skipFetchSetup: true,
+    },
+  });
 
-   export default App;
+  function App() {
+    return (
+      <ConfigProvider alchemyClient={alchemyClient}>
+        <YourAppComponent />
+      </ConfigProvider>
+    );
+  }
+
+  export default App;
    ```
 
    > **Note**: Ensure that `@rainbow-me/rainbowkit/styles.css` is imported in your root layout for styling the wallet connector.
+   > **Note**: Set up the necessary environment variables in your .env file.
 
 ## Available Providers
 
-### `WagmiConfigProvider`
+### `ConfigProvider`
 
-The `WagmiConfigProvider` is responsible for initializing the Wagmi configuration, managing wallet connections, and setting up RainbowKit for UI components related to wallet connections.
+The ConfigProvider is responsible for initializing all the necessary configurations for the library to function properly. It:
+	•	Sets up the Alchemy client for interacting with the blockchain.
+	•	Configures wallet connections using Wagmi and RainbowKit.
+	•	Initializes the Tokenbound SDK for managing token-bound accounts.
 
-### `TokenboundProvider`
-
-The `TokenboundProvider` initializes the Tokenbound SDK and provides it to the components within the application. It enables functionalities for managing token-bound accounts and interacting with NFTs and tokens held by those accounts.
+By wrapping your application with ConfigProvider, all components and hooks from the library will have access to the required context and configurations.
 
 ## Available Hooks
 

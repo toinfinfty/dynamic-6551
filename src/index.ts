@@ -1,5 +1,3 @@
-export { TokenboundProvider } from "./contexts/TokenboundProvider";
-export { WagmiConfigProvider } from "./contexts/WagmiConfigProvider";
 export { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export { useAccountHoldings } from "./hooks/tokenbound/useAccountHoldings";
@@ -18,3 +16,4 @@ export { useBurnERC20 } from "./hooks/nft/useBurnERC20";
 export { useTransferNft } from "./hooks/nft/useTransferNft";
 export { useTransferERC1155Nft } from "./hooks/nft/useTransferERC1155Nft";
 export { useTransferERC20 } from "./hooks/nft/useTransferERC20";
+export { ConfigProvider, useConfig } from "./contexts/ConfigProvider";
