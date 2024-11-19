@@ -1,6 +1,6 @@
 {
   "name": "dynamic-6551",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "dist/dynamic-6551.cjs.js",
   "module": "dist/dynamic-6551.es.js",
@@ -22,7 +22,8 @@
     "preview": "vite preview",
     "generate-docs": "typedoc",
     "test:components": "vitest",
-    "test": "npm run test:components"
+    "test": "npm run test:components",
+    "prepare": "rimraf dist && npm run build"
   },
   "peerDependencies": {
     "alchemy-sdk": "^3.4.3"
@@ -50,6 +51,7 @@
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
     "jsdom": "^25.0.1",
+    "rimraf": "^6.0.1",
     "typedoc": "^0.26.11",
     "typedoc-plugin-markdown": "^4.2.10",
     "typescript": "^5.5.3",

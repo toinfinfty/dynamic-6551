@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useTokenboundTransfer } from './useTokenboundTransfer';
+import { TokenType, useTokenboundTransfer } from './useTokenboundTransfer';
 import { useTokenbound } from '../useTokenbound';
 import { Address } from 'viem';
 
@@ -21,7 +21,7 @@ describe('useTokenboundTransfer', () => {
     });
 
     it('should transfer NFT successfully', async () => {
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 
@@ -29,7 +29,7 @@ describe('useTokenboundTransfer', () => {
             account: '0x1234567890123456789012345678901234567890' as Address,
             tokenContract: '0x1234567890123456789012345678901234567890' as Address,
             tokenId: '1',
-            tokenType: 'ERC721',
+            tokenType: TokenType.ERC721,
             recipientAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcdef' as Address,
         };
 
@@ -45,7 +45,7 @@ describe('useTokenboundTransfer', () => {
     });
 
     it('should transfer ERC20 successfully', async () => {
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 
@@ -69,7 +69,7 @@ describe('useTokenboundTransfer', () => {
     });
 
     it('should throw an error when tokenboundClient is not initialized', async () => {
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: null });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: null });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 
@@ -77,7 +77,7 @@ describe('useTokenboundTransfer', () => {
             account: '0x1234567890123456789012345678901234567890' as Address,
             tokenContract: '0x1234567890123456789012345678901234567890' as Address,
             tokenId: '1',
-            tokenType: 'ERC721',
+            tokenType: TokenType.ERC721,
             recipientAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcdef' as Address,
         };
 
@@ -93,7 +93,7 @@ describe('useTokenboundTransfer', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 
@@ -101,7 +101,7 @@ describe('useTokenboundTransfer', () => {
             account: '0x1234567890123456789012345678901234567890' as Address,
             tokenContract: '0x1234567890123456789012345678901234567890' as Address,
             tokenId: '1',
-            tokenType: 'ERC721',
+            tokenType: TokenType.ERC721,
             recipientAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcdef' as Address,
         };
 
@@ -121,7 +121,7 @@ describe('useTokenboundTransfer', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 
@@ -129,7 +129,7 @@ describe('useTokenboundTransfer', () => {
             account: '0x1234567890123456789012345678901234567890' as Address,
             tokenContract: '0x1234567890123456789012345678901234567890' as Address,
             tokenId: '1',
-            tokenType: 'ERC721',
+            tokenType: TokenType.ERC721,
             recipientAddress: '0xabcdefabcdefabcdefabcdefabcdefabcdefabcdef' as Address,
         };
 
@@ -152,7 +152,7 @@ describe('useTokenboundTransfer', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useTokenbound as vi.Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
+        (useTokenbound as Mock).mockReturnValue({ tokenboundClient: mockTokenboundClient });
 
         const { result } = renderHook(() => useTokenboundTransfer());
 

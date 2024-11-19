@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTransferERC1155Nft } from './useTransferERC1155Nft';
 import { useWalletClient } from 'wagmi';
@@ -20,7 +20,7 @@ describe('useTransferERC1155Nft', () => {
     });
 
     it('should transfer ERC1155 tokens successfully', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useTransferERC1155Nft());
 
@@ -51,7 +51,7 @@ describe('useTransferERC1155Nft', () => {
     });
 
     it('should throw an error when wallet client is not connected', async () => {
-        (useWalletClient as vi.Mock).mockReturnValue({ data: null });
+        (useWalletClient as Mock).mockReturnValue({ data: null });
 
         const { result } = renderHook(() => useTransferERC1155Nft());
 
@@ -75,7 +75,7 @@ describe('useTransferERC1155Nft', () => {
         // Suppress console.error during this test
         const originalConsoleError = console.error;
         console.error = vi.fn();
-        (useWalletClient as vi.Mock).mockReturnValue({ data: mockWalletClient });
+        (useWalletClient as Mock).mockReturnValue({ data: mockWalletClient });
 
         const { result } = renderHook(() => useTransferERC1155Nft());
 

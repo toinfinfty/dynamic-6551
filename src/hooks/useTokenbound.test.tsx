@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useAccount } from 'wagmi';
 import { useTokenbound } from './useTokenbound';
@@ -44,7 +44,7 @@ vi.mock('@tokenbound/sdk', () => ({
 describe('useTokenbound', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        (useAccount as vi.Mock).mockReturnValue({ address: mockContextValue.address });
+        (useAccount as Mock).mockReturnValue({ address: mockContextValue.address });
     });
 
     it('should return context value when used within TokenboundProvider', () => {

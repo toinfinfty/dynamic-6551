@@ -7,11 +7,16 @@ const log = debug("dynamic-6551:useTokenboundTransfer");
 
 export type PossibleENSAddress = Address | `${string}.eth`;
 
+export enum TokenType {
+  ERC721 = "ERC721",
+  ERC1155 = "ERC1155", 
+}
+
 export interface TransferNftParams {
   account: Address;
   tokenContract: Address;
   tokenId: string;
-  tokenType: "ERC721" | "ERC1155";
+  tokenType: TokenType;
   recipientAddress: PossibleENSAddress;
   amount?: number;
   chainId?: number;
