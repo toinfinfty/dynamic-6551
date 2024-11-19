@@ -30,7 +30,7 @@ You’ll also need to install peer dependencies if they’re not included in you
 
 ## Setup and Usage
 
-1. **Import the ConfigProvider:**:
+1. **Import the ConfigProvider:**
 
 To use the library effectively, wrap your application with the ConfigProvider component. This provider configures wallet connections, token-bound account management, and provides necessary configurations like the Alchemy client.
 
