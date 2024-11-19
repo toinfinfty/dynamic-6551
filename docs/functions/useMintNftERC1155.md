@@ -1,8 +1,8 @@
-[**areta-grant-react-library v1.0.0**](../README.md) • **Docs**
+[**dynamic-6551 v1.0.0**](../README.md) • **Docs**
 
 ***
 
-[areta-grant-react-library v1.0.0](../globals.md) / useMintNftERC1155
+[dynamic-6551 v1.0.0](../globals.md) / useMintNftERC1155
 
 # Function: useMintNftERC1155()
 
@@ -38,4 +38,4 @@
 
 ## Defined in
 
-[hooks/nft/useMintNftERC1155.tsx:8](https://github.com/toinfinfty/areta-grant-react-library/blob/83cd84a6cc05b02ea171e77c40326808316432e3/src/hooks/nft/useMintNftERC1155.tsx#L8)
+[hooks/nft/useMintNftERC1155.tsx:8](https://github.com/toinfinfty/dynamic-6551/blob/83cd84a6cc05b02ea171e77c40326808316432e3/src/hooks/nft/useMintNftERC1155.tsx#L8)

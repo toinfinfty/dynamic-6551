@@ -3,7 +3,7 @@ import { useTokenbound } from "../useTokenbound";
 import { Address } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:useTokenboundTransfer");
+const log = debug("dynamic-6551:useTokenboundTransfer");
 
 export type PossibleENSAddress = Address | `${string}.eth`;
 

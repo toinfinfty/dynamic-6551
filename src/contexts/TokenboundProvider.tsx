@@ -6,7 +6,7 @@ import { getNetworkConfig } from "../utils/networkConfig";
 import { createWalletClient, custom } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:TokenboundProvider");
+const log = debug("dynamic-6551:TokenboundProvider");
 
 export interface TokenboundContextType {
   tokenboundClient: TokenboundClient | null;

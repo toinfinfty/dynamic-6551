@@ -4,7 +4,7 @@ import { PARENT_ABI } from "../../utils/parentErc721ABI";
 import { Address } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:useTransferNft");
+const log = debug("dynamic-6551:useTransferNft");
 
 export interface TransferNftParams {
   contractAddress: Address;

@@ -3,7 +3,7 @@ import { useTokenbound } from "../useTokenbound";
 import { Address } from "viem";
 import debug from "debug";
 
-const log = debug("myLibrary:useCreateTokenboundAccount");
+const log = debug("dynamic-6551:useCreateTokenboundAccount");
 
 type CreateTokenboundAccountResponse = {
   account: `0x${string}`;

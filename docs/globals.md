@@ -1,8 +1,8 @@
-[**areta-grant-react-library v1.0.0**](README.md) • **Docs**
+[**dynamic-6551 v1.0.0**](README.md) • **Docs**
 
 ***
 
-# areta-grant-react-library v1.0.0
+# dynamic-6551 v1.0.0
 
 ## Functions
 

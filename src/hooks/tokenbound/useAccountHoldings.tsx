@@ -7,7 +7,7 @@ import { Address } from "viem";
 import debug from "debug";
 import { useConfig } from "../../contexts/ConfigProvider";
 
-const log = debug("myLibrary:useAccountHoldings");
+const log = debug("dynamic-6551:useAccountHoldings");
 
 interface TokenboundAccount {
   address: Address;
