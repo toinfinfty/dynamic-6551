@@ -1,6 +1,6 @@
 {
   "name": "dynamic-6551",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "main": "dist/dynamic-6551.cjs.js",
   "module": "dist/dynamic-6551.es.js",
