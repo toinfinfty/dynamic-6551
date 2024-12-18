@@ -87,7 +87,7 @@ export const useCreateTokenboundAccount = (): UseCreateTokenboundAccount => {
       });
       log(`Account deployment status for ${accountAddress}: ${isDeployed}`);
 
-      if (!isDeployed) {
+      if (!isDeployed && !accountAddress) {
         const deployError = "Failed to deploy account";
         log(deployError);
         throw new Error(deployError);
